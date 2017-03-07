@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace korytnacka.Properties
+namespace TurtleLanguage.Properties
 {
 
 
