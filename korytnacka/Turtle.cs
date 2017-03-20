@@ -9,36 +9,39 @@ namespace TurtleLanguage
 {
     class Turtle
     {
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float previousX { get; set; }
-        public float previousY { get; set; }
-        int angle { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double previousX { get; set; }
+        public double previousY { get; set; }
+        double angle { get; set; }
         public Pen pen { get; set; }
-        public Turtle(float x, float y)
+        Graphics graphics { get; set; }
+        public Turtle(double x, double y, Graphics graphics)
         {
             this.X = x;
             this.Y = y;
+            this.graphics = graphics;
             angle = 0;
             pen = new Pen(Color.Black);
         }
 
-        public void forward(int steps)
+        public void forward(double steps)
         {
             previousX = X;
             previousY = Y;
 
-            float dx = Convert.ToSingle(Math.Sin(angle * Math.PI / 180)) * steps;
-            float dy = -Convert.ToSingle(Math.Cos(angle * Math.PI / 180)) * steps;
+            double dx = Convert.ToDouble(Math.Sin(angle * Math.PI / 180)) * steps;
+            double dy = -Convert.ToDouble(Math.Cos(angle * Math.PI / 180)) * steps;
 
             X += dx;
             Y += dy;
+            graphics.DrawLine(pen, (float)previousX, (float)previousY, (float)X, (float)Y);
         }    
-        public void left(int inputAngle)
+        public void left(double inputAngle)
         {
             angle += inputAngle;
         }
-        public void right(int inputAngle)
+        public void right(double inputAngle)
         {
             angle -= inputAngle;
         }

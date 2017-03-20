@@ -21,7 +21,49 @@ namespace TurtleLanguage
         {
             lexi.insertText(commandString);
             lexi.scan();
-            interpreter();
+            //interpreter();
+            Commands program = compile();
+            program.execute();
+
+        }
+        public Commands compile()
+        {
+            Commands result = new Commands(new List<Command>());
+
+            while (true)
+            {
+                if (lexi.token == "dopredu")
+                {
+                    lexi.scan();
+                    result.add(new Forward(addsub(), turtle));
+                }
+                else if (lexi.token == "vlavo")
+                {
+                    lexi.scan();
+                    result.add(new Left(addsub(), turtle));
+                }
+                else if (lexi.token == "vpravo")
+                {
+                    lexi.scan();
+                    result.add(new Right(addsub(), turtle));
+                }
+                else if (lexi.token == "opakuj")
+                {
+                    lexi.scan();
+                    Expression count = addsub();
+
+                    if (lexi.token == "[")
+                    {
+                        lexi.scan();
+                        Commands body = compile();
+                        if (lexi.token == "]")
+                            lexi.scan();
+                        result.add(new Repeat(count, body));
+                    }
+                }
+                else
+                    return result;
+            }
         }
         public void interpreter()
         {
@@ -105,61 +147,58 @@ namespace TurtleLanguage
                 }
             }
         }
-        public int number() {
-            int num = int.MinValue;
-            num = int.Parse(lexi.token);
+        public Const number() {
+            Const constant = new Const(int.Parse(lexi.token));
             lexi.scan();
-            return num;
+            return constant;
         }
 
-        public int addsub()
+        public Expression addsub()
         {
-            int result = 0;
-            result = muldiv();
+            Expression result = muldiv();
             while (lexi.token == "+" ||
                     lexi.token == "-")
             {
                 if (lexi.token == "+")
                 {
                     lexi.scan();
-                    result += muldiv();
+                    result = new Add(result, muldiv());
                 }
                 else if(lexi.token == "-")
                 {
                     lexi.scan();
-                    result -= muldiv();
+                    result = new Sub(result, muldiv());
                 }
             }
             return result;
         }
-        public int muldiv()
+        public Expression muldiv()
         {
-            int result = 0;
-            result = sqrt();
+            Expression result = sqrt();
             while (lexi.token == "*" ||
                     lexi.token == "/")
             {
                 if (lexi.token == "*")
                 {
                     lexi.scan();
-                    result *= sqrt();
+                    result = new Mul(result, sqrt());
                 }
                 else if (lexi.token == "/")
                 {
                     lexi.scan();
-                    result /= sqrt();
+                    result = new Div(result, sqrt());
                 }
             }
             return result;
         }
-        public int braces()
+        public Expression braces()
         {
             if (lexi.token != "(")
                 return number();
             else
             {
                 lexi.scan();
-                int result = addsub();
+                Expression result = addsub();
                 if (lexi.token == ")")
                     lexi.scan();
                 return result;
@@ -171,34 +210,32 @@ namespace TurtleLanguage
             lexi.scan();
             return compare().ToString();
         }
-        public int minus()
+        public Expression minus()
         {
             if (lexi.token != "-")
                 return braces();
             else
             {
                 lexi.scan();
-                return -braces();
+                Expression result = new Minus(braces());
+                return result;
             }
-
         }
 
-        public int sqrt()
+        public Expression sqrt()
         {
-            int result = 0;
-            result = minus();
+            Expression result = minus();
             while (lexi.token == "^")
             {
                 lexi.scan();
-                result = (int) Math.Pow(result, minus());
+                result = new Sqrt(result, minus());
             }
             return result;
         }
-        public bool compare()
+        public Expression compare()
         {
-            int result = 0;
-            result = addsub();
-            bool returnBool = false;
+            Expression result = addsub();
+            
             while (lexi.token == "<" ||
                     lexi.token == ">" ||
                     lexi.token == "<=" ||
@@ -207,37 +244,25 @@ namespace TurtleLanguage
                 if (lexi.token == "<")
                 {
                     lexi.scan();
-                    if (result < addsub())
-                        return true;
-                    else
-                        return false;
+                    return new Less(result, addsub());
                 }
                 else if (lexi.token == ">")
                 {
                     lexi.scan();
-                    if (result > addsub())
-                        return true;
-                    else
-                        return false;
+                    return new Greater(result, addsub());
                 }
                 else if (lexi.token == "<=")
                 {
                     lexi.scan();
-                    if (result <= addsub())
-                        return true;
-                    else
-                        return false;
+                    return new LessEquals(result, addsub());
                 }
                 else if (lexi.token == ">=")
                 {
                     lexi.scan();
-                    if (result >= addsub())
-                        return true;
-                    else
-                        return false;
+                    return new GreaterEquals(result, addsub());
                 }
             }
-            return returnBool;
+            return result;
         }
 
     }

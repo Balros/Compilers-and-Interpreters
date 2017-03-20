@@ -23,7 +23,7 @@ namespace TurtleLanguage
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            turtle = new Turtle(drawingArea.Width/2, drawingArea.Height/2);
+            turtle = new Turtle(drawingArea.Width/2, drawingArea.Height/2, graphics);
             syntaxAnalyser = new SyntaxAnalyser(turtle, this);
         }
 
@@ -32,14 +32,16 @@ namespace TurtleLanguage
             if (e.KeyCode == Keys.Enter)
             {
                 graphics.Clear(Color.White);
-                textBox1.Text = syntaxAnalyser.evaluate(textBox1.Text);
+                //textBox1.Text = syntaxAnalyser.evaluate(textBox1.Text);
                 //syntaxAnalyser.startInterpreter(textBox1.Text);
+                String program = "opakuj 4 [dopredu 100 vpravo 90]";
+                syntaxAnalyser.startInterpreter(program);
             }
         }
 
         internal void drawTurtle()
         {
-            graphics.DrawLine(turtle.pen, turtle.previousX, turtle.previousY, turtle.X, turtle.Y);
+            graphics.DrawLine(turtle.pen, (float)turtle.previousX, (float)turtle.previousY, (float)turtle.X, (float)turtle.Y);
         }
     }
 }
