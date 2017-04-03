@@ -8,6 +8,6 @@ namespace TurtleLanguage
 {
     abstract class Expression
     {
-        public abstract double evaluate();
+        public abstract double evaluate(GlobalParameters globalParameters);
     }
 }

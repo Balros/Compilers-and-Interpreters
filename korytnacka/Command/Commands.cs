@@ -14,11 +14,11 @@ namespace TurtleLanguage
         {
             this.items = items;
         }
-        public override void execute()
+        public override void execute(GlobalParameters globalParameters)
         {
             foreach (Command item in items)
             {
-                item.execute();
+                item.execute(globalParameters);
             }
         }
         public void add(Command command)

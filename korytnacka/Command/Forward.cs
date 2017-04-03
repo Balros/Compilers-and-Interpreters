@@ -8,13 +8,13 @@ namespace TurtleLanguage
 {
     class Forward : TurtleCommand
     {
-        public Forward(Expression param, Turtle turtle) : base(param, turtle)
+        public Forward(Expression param, Turtle turtle) : base(param)
         {
         }
 
-        public override void execute()
+        public override void execute(GlobalParameters globalParameters)
         {
-            turtle.forward(param.evaluate());
+            globalParameters.turtle.forward(param.evaluate(globalParameters));
         }
     }
 }

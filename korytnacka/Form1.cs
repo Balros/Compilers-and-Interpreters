@@ -24,7 +24,7 @@ namespace TurtleLanguage
         private void Form1_Load(object sender, EventArgs e)
         {
             turtle = new Turtle(drawingArea.Width/2, drawingArea.Height/2, graphics);
-            syntaxAnalyser = new SyntaxAnalyser(turtle, this);
+            syntaxAnalyser = new SyntaxAnalyser(turtle, this, textBox2);
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
@@ -34,7 +34,7 @@ namespace TurtleLanguage
                 graphics.Clear(Color.White);
                 //textBox1.Text = syntaxAnalyser.evaluate(textBox1.Text);
                 //syntaxAnalyser.startInterpreter(textBox1.Text);
-                String program = "opakuj 4 [dopredu 100 vpravo 90]";
+                string program = "a = 1 kym a <= 100 [dopredu a vpravo 90 a = a + 1]";
                 syntaxAnalyser.startInterpreter(program);
             }
         }

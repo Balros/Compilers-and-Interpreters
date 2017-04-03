@@ -9,11 +9,9 @@ namespace TurtleLanguage
     abstract class TurtleCommand : Command
     {
         protected Expression param;
-        protected Turtle turtle;
-        public TurtleCommand(Expression param, Turtle turtle)
+        public TurtleCommand(Expression param)
         {
             this.param = param;
-            this.turtle = turtle;
         }
     }
 }

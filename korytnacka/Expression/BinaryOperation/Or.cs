@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace TurtleLanguage
 {
-    class Greater : BinaryOperation
+    class Or : BinaryOperation
     {
-        public Greater(Expression left, Expression right) : base(left, right)
+        public Or(Expression left, Expression right) : base(left, right)
         {
         }
 
         public override double evaluate(GlobalParameters globalParameters)
         {
-            if (left.evaluate(globalParameters) > right.evaluate(globalParameters))
+            if (left.evaluate(globalParameters) == 1 ||
+                right.evaluate(globalParameters) == 1)
                 return 1;
             else
                 return 0;
-            //TODO return true/false, not 0/1
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace TurtleLanguage
 {
@@ -10,29 +11,41 @@ namespace TurtleLanguage
     {
         LexicalAnalyser lexi;
         Turtle turtle;
+        TextBox textBox;
         Form1 form;
-        public SyntaxAnalyser(Turtle turtle, Form1 form)
+        Dictionary<string, double> variables;
+        GlobalParameters globalParameters;
+
+        public SyntaxAnalyser(Turtle turtle, Form1 form, TextBox textBox)
         {
             lexi = new LexicalAnalyser();
             this.turtle = turtle;
             this.form = form;
+            this.textBox = textBox;
+            globalParameters = new GlobalParameters(turtle, textBox);
+            variables = new Dictionary<string, double>();
         }
         public void startInterpreter(string commandString)
         {
-            lexi.insertText(commandString);
+            lexi.initialize(commandString);
             lexi.scan();
             //interpreter();
             Commands program = compile();
-            program.execute();
+            program.execute(globalParameters);
 
         }
         public Commands compile()
         {
             Commands result = new Commands(new List<Command>());
 
-            while (true)
+            while (lexi.kind == LexicalAnalyser.WORD)
             {
-                if (lexi.token == "dopredu")
+                if (lexi.token == "vypis")
+                {
+                    lexi.scan();
+                    result.add(new Print(expr(), textBox)); //WTF
+                }
+                else if (lexi.token == "dopredu")
                 {
                     lexi.scan();
                     result.add(new Forward(addsub(), turtle));
@@ -61,9 +74,40 @@ namespace TurtleLanguage
                         result.add(new Repeat(count, body));
                     }
                 }
+                else if (lexi.token == "kym")
+                {
+                    lexi.scan();
+                    Expression test = expr();
+
+                    if (lexi.token != "[")
+                    {
+                        MessageBox.Show("Chyba lava zatvorka \"[\" pre prikaz kym.");
+                    }
+                    else
+                    {
+                        lexi.scan();
+                        result.add(new While(test, compile()));
+                        if (lexi.token != "]")
+                            MessageBox.Show("Chyba prava zatvorka \"]\" pre prikaz kym.");
+                        else
+                            lexi.scan();
+                    }
+                }
                 else
-                    return result;
+                {
+                    string name = lexi.token;
+                    lexi.scan();
+                    if (lexi.token != "=")
+                    {
+                        MessageBox.Show("Neznamy prikaz.");
+
+                    }
+                    lexi.scan();
+                    result.add(new Assign(name, expr())); //WTF
+                    variables[name] = 0;
+                }
             }
+            return result;
         }
         public void interpreter()
         {
@@ -147,28 +191,56 @@ namespace TurtleLanguage
                 }
             }
         }
-        public Const number() {
-            Const constant = new Const(int.Parse(lexi.token));
-            lexi.scan();
-            return constant;
-        }
-
-        public Expression addsub()
+        public Expression operand()
         {
-            Expression result = muldiv();
-            while (lexi.token == "+" ||
-                    lexi.token == "-")
+            Expression result = null;
+            if (lexi.kind == LexicalAnalyser.NUMBER)
             {
-                if (lexi.token == "+")
+                result = new Const(int.Parse(lexi.token));
+                lexi.scan();
+            }
+            else if (lexi.kind == LexicalAnalyser.WORD)
+            {
+                if (!variables.ContainsKey(lexi.token))
                 {
-                    lexi.scan();
-                    result = new Add(result, muldiv());
+                    MessageBox.Show("Unassigned variable: " + lexi.token);
                 }
-                else if(lexi.token == "-")
+                result = new Access(lexi.token, variables);
+                lexi.scan();
+            }
+            else if (lexi.token == "(") {
+                lexi.scan();
+                result = expr();
+                if (lexi.token != ")")
                 {
+                    MessageBox.Show("Missing \")\"");
                     lexi.scan();
-                    result = new Sub(result, muldiv());
                 }
+            }
+            else
+            {
+                MessageBox.Show("Number or variable name");
+            }
+            return result;
+        }
+        public Expression minus()
+        {
+            if (lexi.token != "-")
+                return operand();
+            else
+            {
+                lexi.scan();
+                Expression result = new Minus(operand());
+                return result;
+            }
+        }
+        public Expression sqrt()
+        {
+            Expression result = minus();
+            while (lexi.token == "^")
+            {
+                lexi.scan();
+                result = new Sqrt(result, minus());
             }
             return result;
         }
@@ -191,44 +263,22 @@ namespace TurtleLanguage
             }
             return result;
         }
-        public Expression braces()
+        public Expression addsub()
         {
-            if (lexi.token != "(")
-                return number();
-            else
+            Expression result = muldiv();
+            while (lexi.token == "+" ||
+                    lexi.token == "-")
             {
-                lexi.scan();
-                Expression result = addsub();
-                if (lexi.token == ")")
+                if (lexi.token == "+")
+                {
                     lexi.scan();
-                return result;
-            }
-        }
-        public string evaluate(string inputText)
-        {
-            lexi.insertText(inputText);
-            lexi.scan();
-            return compare().ToString();
-        }
-        public Expression minus()
-        {
-            if (lexi.token != "-")
-                return braces();
-            else
-            {
-                lexi.scan();
-                Expression result = new Minus(braces());
-                return result;
-            }
-        }
-
-        public Expression sqrt()
-        {
-            Expression result = minus();
-            while (lexi.token == "^")
-            {
-                lexi.scan();
-                result = new Sqrt(result, minus());
+                    result = new Add(result, muldiv());
+                }
+                else if(lexi.token == "-")
+                {
+                    lexi.scan();
+                    result = new Sub(result, muldiv());
+                }
             }
             return result;
         }
@@ -264,6 +314,21 @@ namespace TurtleLanguage
             }
             return result;
         }
-
+        public string evaluate(string inputText)
+        {
+            lexi.initialize(inputText);
+            lexi.scan();
+            return compare().ToString();
+        }
+        public Expression expr()
+        {
+            Expression result = compare();
+            while (lexi.token == "or")
+            {
+                lexi.scan();
+                result = new Or(result, compare());
+            }
+            return result;
+        }
     }
 }

@@ -30,6 +30,7 @@
         {
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.drawingArea = new System.Windows.Forms.PictureBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.drawingArea)).BeginInit();
             this.SuspendLayout();
             // 
@@ -45,15 +46,24 @@
             // 
             this.drawingArea.Location = new System.Drawing.Point(12, 12);
             this.drawingArea.Name = "drawingArea";
-            this.drawingArea.Size = new System.Drawing.Size(1479, 1004);
+            this.drawingArea.Size = new System.Drawing.Size(1479, 789);
             this.drawingArea.TabIndex = 1;
             this.drawingArea.TabStop = false;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(12, 807);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(1479, 209);
+            this.textBox2.TabIndex = 2;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1503, 1072);
+            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.drawingArea);
             this.Controls.Add(this.textBox1);
             this.Name = "Form1";
@@ -69,6 +79,7 @@
 
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.PictureBox drawingArea;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }
 

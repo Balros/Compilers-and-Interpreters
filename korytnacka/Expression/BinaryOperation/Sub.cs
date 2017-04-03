@@ -12,9 +12,9 @@ namespace TurtleLanguage
         {
         }
 
-        public override double evaluate()
+        public override double evaluate(GlobalParameters globalParameters)
         {
-            return left.evaluate() - right.evaluate();
+            return left.evaluate(globalParameters) - right.evaluate(globalParameters);
         }
     }
 }

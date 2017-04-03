@@ -8,13 +8,13 @@ namespace TurtleLanguage
 {
     class Left : TurtleCommand
     {
-        public Left(Expression param, Turtle turtle) : base(param, turtle)
+        public Left(Expression param, Turtle turtle) : base(param)
         {
         }
 
-        public override void execute()
+        public override void execute(GlobalParameters globalParameters)
         {
-            turtle.left(param.evaluate());
+            globalParameters.turtle.left(param.evaluate(globalParameters));
         }
     }
 }

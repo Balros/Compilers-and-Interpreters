@@ -8,13 +8,13 @@ namespace TurtleLanguage
 {
     class Right : TurtleCommand
     {
-        public Right(Expression param, Turtle turtle) : base(param, turtle)
+        public Right(Expression param, Turtle turtle) : base(param)
         {
         }
 
-        public override void execute()
+        public override void execute(GlobalParameters globalParameters)
         {
-            turtle.right(param.evaluate());
+            globalParameters.turtle.right(param.evaluate(globalParameters));
         }
     }
 }

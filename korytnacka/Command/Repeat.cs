@@ -16,12 +16,12 @@ namespace TurtleLanguage
             this.commands = commands;
         }
 
-        public override void execute()
+        public override void execute(GlobalParameters globalParameters)
         {
-            double repetitionNumber = repetition.evaluate();
+            double repetitionNumber = repetition.evaluate(globalParameters);
             for (int i = 0; i < repetitionNumber; i++)
             {
-                commands.execute();
+                commands.execute(globalParameters);
             }
         }
     }

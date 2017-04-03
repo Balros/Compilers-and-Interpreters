@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Expression\UnaryOperation\Access.cs" />
+    <Compile Include="Command\Assign.cs" />
     <Compile Include="Command\Command.cs" />
     <Compile Include="Command\Commands.cs" />
     <Compile Include="Expression\BinaryOperation\Compare\Equals.cs" />
@@ -72,6 +74,9 @@
     <Compile Include="Expression\BinaryOperation\Compare\GreaterEqual.cs" />
     <Compile Include="Expression\BinaryOperation\Compare\Less.cs" />
     <Compile Include="Expression\BinaryOperation\Compare\LessEquals.cs" />
+    <Compile Include="Command\Print.cs" />
+    <Compile Include="Expression\BinaryOperation\Or.cs" />
+    <Compile Include="GlobalParameters.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Expression\BinaryOperation\Sub.cs" />
@@ -80,6 +85,7 @@
     <Compile Include="Command\Repeat.cs" />
     <Compile Include="Turtle.cs" />
     <Compile Include="Command\TurtleCommand.cs" />
+    <Compile Include="Command\While.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

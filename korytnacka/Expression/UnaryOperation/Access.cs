@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace TurtleLanguage
 {
-    class Const : Expression
+    class Access : Expression
     {
-        double value;
-        public Const(double value)
+        string Name;
+        
+        public Access(string Name, Dictionary<string, double> variables)
         {
-            this.value = value;
+            this.Name = Name;
         }
         public override double evaluate(GlobalParameters globalParameters)
         {
-            return value;
+            return globalParameters.variables[Name];
         }
-        
     }
 }
