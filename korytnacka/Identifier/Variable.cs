@@ -8,8 +8,8 @@ namespace TurtleLanguage
 {
     abstract class Variable : Identifier
     {
-        string address;
-        public Variable(string name, string address)
+        protected int address;
+        public Variable(string name, int address)
         {
             this.name = name;
             this.address = address;

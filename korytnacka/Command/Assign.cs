@@ -8,21 +8,32 @@ namespace TurtleLanguage
 {
     class Assign : Command
     {
-        string Name;
-        Expression Expr;
+        //string Name;
+        Variable variable;
+        Expression expr;
 
-        public Assign(string Name, Expression Expr)
+        //public Assign(string Name, Expression Expr)
+        //{
+        //    this.Name = Name;
+        //    this.Expr = Expr;
+        //}
+        public Assign(Variable variable, Expression expr)
         {
-            this.Name = Name;
-            this.Expr = Expr;
+            this.variable = variable;
+            this.expr = expr;
         }
 
         public override void execute(GlobalParameters globalParameters)
         {
-            if (globalParameters.variables.ContainsKey(Name))
-                globalParameters.variables[Name] = Expr.evaluate(globalParameters);
-            else
-                globalParameters.variables.Add(Name, Expr.evaluate(globalParameters)); 
+            variable.set(expr.evaluate(globalParameters),globalParameters);
         }
+
+        //public override void execute(GlobalParameters globalParameters)
+        //{
+        //    if (globalParameters.variables.ContainsKey(Name))
+        //        globalParameters.variables[Name] = Expr.evaluate(globalParameters);
+        //    else
+        //        globalParameters.variables.Add(Name, Expr.evaluate(globalParameters)); 
+        //}
     }
 }

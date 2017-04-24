@@ -8,18 +8,18 @@ namespace TurtleLanguage
 {
     class GlobalVariable : Variable
     {
-        public GlobalVariable(string name, string address) : base(name, address)
+        public GlobalVariable(string name, int address) : base(name, address)
         {
         }
 
         public override double get(GlobalParameters globalParameters)
         {
-            return globalParameters.globalMemory[name];
+            return globalParameters.globalMemory[address];
         }
 
         public override void set(double value, GlobalParameters globalParameters)
         {
-            globalParameters.globalMemory[name] = value;
+            globalParameters.globalMemory[address] = value;
         }
     }
 }

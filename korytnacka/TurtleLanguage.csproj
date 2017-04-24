@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command\Call.cs" />
     <Compile Include="Expression\UnaryOperation\Access.cs" />
     <Compile Include="Command\Assign.cs" />
     <Compile Include="Command\Command.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="CompilerInterpreter\SyntaxAnalyser.cs" />
     <Compile Include="Command\Right.cs" />
     <Compile Include="Command\Repeat.cs" />
+    <Compile Include="Identifier\Subroutine.cs" />
     <Compile Include="Turtle.cs" />
     <Compile Include="Command\TurtleCommand.cs" />
     <Compile Include="Command\While.cs" />

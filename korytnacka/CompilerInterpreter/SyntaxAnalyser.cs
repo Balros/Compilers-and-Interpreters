@@ -15,6 +15,8 @@ namespace TurtleLanguage
         Form1 form;
         Dictionary<string, double> variables;
         GlobalParameters globalParameters;
+        Dictionary<string, int> globalNamespace;
+        Dictionary<string, int> localNamespace;
 
         public SyntaxAnalyser(Turtle turtle, Form1 form, TextBox textBox)
         {
@@ -23,6 +25,8 @@ namespace TurtleLanguage
             this.form = form;
             this.textBox = textBox;
             globalParameters = new GlobalParameters(turtle, textBox);
+            globalNamespace = new Dictionary<string, int>();
+            localNamespace = new Dictionary<string, int>();
             variables = new Dictionary<string, double>();
         }
         public void startInterpreter(string commandString)
@@ -201,6 +205,11 @@ namespace TurtleLanguage
             }
             else if (lexi.kind == LexicalAnalyser.WORD)
             {
+                if(localNamespace.Count != 0 &&
+                    localNamespace.ContainsKey(lexi.token))
+                {
+                    result = new Access(localNamespace[lexi.token]);
+                }
                 if (!variables.ContainsKey(lexi.token))
                 {
                     MessageBox.Show("Unassigned variable: " + lexi.token);
